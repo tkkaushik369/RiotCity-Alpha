@@ -3,8 +3,6 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js'
-import * as CANNON from 'cannon-es'
-import CannonDebugRenderer from './cannonDebugRenderer'
 // import * as scene_data from './scene.json'
 import * as scene_data from './scene2.json'
 import { City } from './World/City'
@@ -38,56 +36,7 @@ const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1)
 directionalLight2.position.set(25, -50, -15)
 scene.add(directionalLight2)
 
-// const light = new THREE.DirectionalLight()
-// light.position.set(25, 50, 25)
-// light.intensity = 2.0
-// light.castShadow = true
-// light.shadow.mapSize.width = 16384
-// light.shadow.mapSize.height = 16384
-// light.shadow.camera.near = 0.5
-// light.shadow.camera.far = 100
-// light.shadow.camera.top = 100
-// light.shadow.camera.bottom = -100
-// light.shadow.camera.left = -100
-// light.shadow.camera.right = 100
-// scene.add(light)
-
-// const axesHelper = new THREE.AxesHelper( 1 );
-// scene.add( axesHelper );
-
-// const size = 10;
-// const divisions = 10;
-// const gridHelper = new THREE.GridHelper( size, divisions );
-// scene.add( gridHelper );
-
-// const plane = new THREE.Plane( new THREE.Vector3( 0, 1, 0 ), 1 );
-// const helper = new THREE.PlaneHelper( plane, 1, 0xffff00 );
-// scene.add( helper );
-
 const controls = new OrbitControls(camera, renderer.domElement)
-
-// const phongMaterial = new THREE.MeshPhongMaterial();
-
-const world = new CANNON.World()
-world.gravity.set(0, -9.82, 0)
-
-const cannonDebugRenderer = new CannonDebugRenderer(scene, world)
-
-const groundMaterial = new CANNON.Material('groundMaterial')
-groundMaterial.friction = 0.25
-groundMaterial.restitution = 0.25
-
-//ground
-// const groundGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry(100, 100);
-// const groundMesh: THREE.Mesh = new THREE.Mesh(groundGeometry, phongMaterial);
-// groundMesh.rotateX(-Math.PI / 2);
-// groundMesh.receiveShadow = true;
-// scene.add(groundMesh);
-// const groundShape = new CANNON.Box(new CANNON.Vec3(50, 1, 50));
-// const groundBody = new CANNON.Body({ mass: 0, material: groundMaterial });
-// groundBody.addShape(groundShape);
-// groundBody.position.set(0, -1, 0);
-// world.addBody(groundBody);
 
 const keyMap: { [id: string]: boolean } = {}
 const onDocumentKey = (e: KeyboardEvent) => {
@@ -109,14 +58,6 @@ const stats = new Stats()
 document.body.appendChild(stats.dom)
 
 const gui = new GUI()
-const physicsFolder = gui.addFolder('Physics')
-physicsFolder.add(world.gravity, 'x', -10.0, 10.0, 0.1)
-physicsFolder.add(world.gravity, 'y', -10.0, 10.0, 0.1)
-physicsFolder.add(world.gravity, 'z', -10.0, 10.0, 0.1)
-physicsFolder.open()
-
-const clock = new THREE.Clock()
-let delta
 
 // delaunay city
 if (false) {
@@ -207,15 +148,13 @@ if (false) {
 }
 
 if (true) {
-	physicsFolder.close()
-
-	/* function downloadData(storageObj: any) {
+	function downloadData(storageObj: any) {
 		var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(storageObj))
 		var dlAnchorElem = document.createElement('a')
 		dlAnchorElem.setAttribute('href', dataStr)
 		dlAnchorElem.setAttribute('download', 'scene.json')
 		dlAnchorElem.click()
-	} */
+	}
 
 	var city: { data: AllyBlock; vis: THREE.Object3D }[][] = []
 
@@ -229,15 +168,15 @@ if (true) {
 		render: 1,
 		generate: generate,
 		download: () => {
-			const cityData: { grid: number[][][], buildings: { x: number; z: number; size: number }[] }[] = []
+			const cityData: { grid: number[][][]; buildings: { x: number; z: number; size: number }[] }[] = []
 			for (let i = 0; i < city.length; i++) {
 				for (let j = 0; j < city[i].length; j++) {
 					const ally = city[i][j]
 					cityData.push({ grid: ally.data.grid, buildings: ally.data.buildings })
 				}
 			}
-			console.table(cityData)
-			// downloadData(cityData)
+			// console.table(cityData)
+			downloadData(cityData)
 		},
 	}
 
@@ -286,11 +225,6 @@ if (true) {
 
 function animate() {
 	requestAnimationFrame(animate)
-
-	delta = Math.min(clock.getDelta(), 0.1)
-	world.step(delta)
-
-	cannonDebugRenderer.update()
 
 	render()
 
