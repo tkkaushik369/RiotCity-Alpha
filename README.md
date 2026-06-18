@@ -1,4 +1,4 @@
-# [Demo](https://tkkaushik369.github.io/RiotCity)
+# [Demo](https://tkkaushik369.github.io/RiotCity-Alpha)
 Also Check [RiotCity](https://github.com/tkkaushik369/RiotCity)
 
 ![images/demo_1.png](images/demo_1.png)
