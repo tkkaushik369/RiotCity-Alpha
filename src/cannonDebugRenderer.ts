@@ -19,7 +19,7 @@ export default class CannonDebugRenderer {
 	private _particleMaterial = new THREE.PointsMaterial();
 	private _sphereGeometry: THREE.SphereGeometry;
 	private _boxGeometry: THREE.BoxGeometry;
-	private _cylinderGeometry: THREE.CylinderGeometry;
+	// private _cylinderGeometry: THREE.CylinderGeometry;
 	private _planeGeometry: THREE.PlaneGeometry;
 	private _particleGeometry: THREE.BufferGeometry;
 
@@ -48,7 +48,7 @@ export default class CannonDebugRenderer {
 		});
 		this._sphereGeometry = new THREE.SphereGeometry(1);
 		this._boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-		this._cylinderGeometry = new THREE.CylinderGeometry(1, 1, 2, 8);
+		// this._cylinderGeometry = new THREE.CylinderGeometry(1, 1, 2, 8);
 		this._planeGeometry = new THREE.PlaneGeometry(10, 10, 10, 10);
 		this._particleGeometry = new THREE.BufferGeometry();
 		this._particleGeometry.setFromPoints([new THREE.Vector3(0, 0, 0)]);
@@ -104,7 +104,7 @@ export default class CannonDebugRenderer {
 		meshes.length = meshIndex;
 	}
 
-	private _updateMesh(index: number, body: CANNON.Body, shape: CANNON.Shape) {
+	private _updateMesh(index: number, _body: CANNON.Body, shape: CANNON.Shape) {
 		let mesh = this._meshes[index];
 		if (!this._typeMatch(mesh, shape)) {
 			if (mesh) {
